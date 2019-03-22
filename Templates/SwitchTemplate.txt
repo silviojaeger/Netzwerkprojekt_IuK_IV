@@ -1,0 +1,16 @@
+en
+delete flash:vlan.dat
+
+
+conf t
+hostname S9
+lin con 0
+logging synchronous
+exit
+no ip domain lookup
+!--------------------------
+interface f0/1
+
+
+
+
