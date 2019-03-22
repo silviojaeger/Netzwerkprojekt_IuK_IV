@@ -1,0 +1,77 @@
+!-----------------------------------------------------
+!----------Distribution-Switch-Template---------------
+!-----------------------------------------------------
+end
+delete flash:vlan.dat
+
+conf t
+hostname S1
+lin con 0
+logging synchronous
+exit
+no ip domain lookup
+
+
+!----Layer 3 Switches only (no switchport)------------
+interface range g0/1-48
+shutdown
+exit
+ip routing
+
+!----Interfaces-to-Core-------------------------------
+interface g0/1
+no switchport
+ip address 10.0.3.2 255.255.255.252
+ipv6 address 2001:620:3106:30::2/64
+description "Link to S3 F0/3"
+no shut
+exit
+
+interface g0/2
+no switchport
+ip address 10.0.3.14 255.255.255.252
+ipv6 address 2001:620:3106:31::2/64
+description "Link to S4 F0/4"
+no shut
+exit
+
+!----VLAN-config--------------------------------------
+vlan 10
+name VLAN_Management
+
+vlan 11
+name VLAN_Verkauf
+
+vlan 12
+name VLAN_Entwicklung
+
+
+!----Interfaces-Acces--Layer--------------------------
+interface g0/3
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S2 F0/3"
+no shut
+exit
+
+interface g0/17
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,99
+description "Link to S7 G0/1"
+no shut
+exit
+
+interface g0/18
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,12,99
+description "Link to S8 G0/2"
+no shut
+exit
+
+
+!---Write conf to startup-----------------------------
+end
+write
