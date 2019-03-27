@@ -2,7 +2,7 @@
 !----------Distribution-Switch-Template---------------
 !-----------------------------------------------------
 conf t
-hostname S1
+hostname S2
 lin con 0
 logging synchronous
 exit
@@ -18,17 +18,17 @@ ip routing
 !----Interfaces-to-Core-------------------------------
 interface g0/1
 no switchport
-ip address 10.0.3.2 255.255.255.252
-ipv6 address 2001:620:3106:30::2/64
-description "Link to S3 F0/3"
+ip address 10.0.3.6 255.255.255.252
+ipv6 address 2001:620:3106:33::2/64
+description "Link to S4 F0/3"
 no shut
 exit
 
 interface g0/2
 no switchport
-ip address 10.0.3.14 255.255.255.252
-ipv6 address 2001:620:3106:31::2/64
-description "Link to S4 F0/4"
+ip address 10.0.3.10 255.255.255.252
+ipv6 address 2001:620:3106:32::2/64
+description "Link to S3 F0/4"
 no shut
 exit
 
@@ -48,23 +48,23 @@ interface g0/3
 switchport mode trunk
 switchport trunk native vlan 99
 switchport trunk allowed vlan 10,11,12,99
-description "Link to S2 F0/3"
+description "Link to S1 G0/3"
 no shut
 exit
 
 interface g0/17
 switchport mode trunk
 switchport trunk native vlan 99
-switchport trunk allowed vlan 10,11,99
-description "Link to S7 G0/1"
+switchport trunk allowed vlan 10,12,99
+description "Link to S8 G0/1"
 no shut
 exit
 
 interface g0/18
 switchport mode trunk
 switchport trunk native vlan 99
-switchport trunk allowed vlan 10,12,99
-description "Link to S8 G0/2"
+switchport trunk allowed vlan 10,11,99
+description "Link to S7 G0/2"
 no shut
 exit
 
