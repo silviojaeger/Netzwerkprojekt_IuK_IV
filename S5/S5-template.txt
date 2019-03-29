@@ -37,6 +37,7 @@ name VLAN_Entwicklung
 
 !----Interfaces-Acces--Layer--------------------------
 interface g0/17
+switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk native vlan 99
 switchport trunk allowed vlan 10,11,12,99
@@ -45,6 +46,7 @@ no shut
 exit
 
 interface g0/18
+switchport trunk encapsulation dot1q
 switchport mode trunk
 switchport trunk native vlan 99
 switchport trunk allowed vlan 10,11,12,99
