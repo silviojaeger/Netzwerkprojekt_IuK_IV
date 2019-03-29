@@ -52,6 +52,14 @@ description "Link to S9 G0/2"
 no shut
 exit
 
+!---Management-IP-Address-----------------------------
+int vlan 10
+ip address 10.1.10.1 255.255.255.0
+ipv6 address 2001:620:3106:10A0::1/64
+no shut
+exit
+
+
 
 !---Write conf to startup-----------------------------
 end
