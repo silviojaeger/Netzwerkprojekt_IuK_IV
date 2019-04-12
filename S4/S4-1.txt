@@ -6,10 +6,9 @@ delete flash:vlan.dat
 
 
 conf t
-hostname S3
+hostname S4
 lin con 0
 logging synchronous
-speed 9600
 exit
 no ip domain lookup
 
@@ -23,50 +22,58 @@ ip routing
 
 !-----------------------------------------------------
 interface f0/1
-ip address 10.0.1.6 255.255.255.252
-ipv6 address 2001:620:3106:10::2/64
-ipv6 address FE80::3 link-local
-description "Link to R2 F0/1/0"
+ip address 10.0.1.2 255.255.255.252
+ipv6 address 2001:620:3106:11::2/64
+ipv6 address FE80::4 link-local
+description "Link to R2 F0/1/1"
 no shut
 exit
 
 interface f0/2
-ip address 10.0.2.1 255.255.255.252
-ipv6 address 2001:620:3106:20::1/64
-ipv6 address FE80::3 link-local
-description "Link to S4 F0/2"
+ip address 10.0.2.2 255.255.255.252
+ipv6 address 2001:620:3106:20::2/64
+ipv6 address FE80::4 link-local
+description "Link to S3 F0/2"
 no shut
 exit
 
 interface f0/3
-ip address 10.0.3.1 255.255.255.252
-ipv6 address 2001:620:3106:30::1/64
-ipv6 address FE80::3 link-local
-description "Link to S1 G0/1"
+ip address 10.0.3.5 255.255.255.252
+ipv6 address 2001:620:3106:33::1/64
+ipv6 address FE80::4 link-local
+description "Link to S2 G0/1"
 no shut
 exit
 
 interface f0/4
-ip address 10.0.3.9 255.255.255.252
-ipv6 address 2001:620:3106:32::1/64
-ipv6 address FE80::3 link-local
-description "Link to S2 G0/2"
+ip address 10.0.3.13 255.255.255.252
+ipv6 address 2001:620:3106:31::1/64
+ipv6 address FE80::4 link-local
+description "Link to S1 G0/2"
+no shut
+exit
+
+interface f0/13
+ip address 10.1.0.1 255.255.255.252
+ipv6 address 2001:620:3106:1000::1/64
+ipv6 address FE80::4 link-local
+description "Link to S5 G0/13"
 no shut
 exit
 
 !---Loopbak-------------------------------------------
 interface loopback 1
-ip address 10.0.9.1 255.255.255.255
-ipv6 address 2001:620:3106:90::1/128
+ip address 10.0.9.2 255.255.255.255
+ipv6 address 2001:620:3106:90::2/128
 exit
 
 !---EIGRP Routing--------------------------------------
 router eigrp 1				
-network 10.0.3.8 0.0.0.3		
-network 10.0.9.1 0.0.0.3
+network 10.0.3.12 0.0.0.3
 network 10.0.2.0 0.0.0.3
-network 10.0.3.0 0.0.0.3
-network 10.0.1.4 0.0.0.3
+network 10.1.0.0 0.0.0.3
+network 10.0.1.0 0.0.0.3 
+network 10.0.3.4 0.0.0.3
 no auto-summary	
 exit
 
@@ -74,7 +81,7 @@ exit
 ipv6 unicast-routing
 
 ipv6 router eigrp 1
-eigrp router-id 3.3.3.3
+eigrp router-id 4.4.4.4
 no shut
 exit
 
