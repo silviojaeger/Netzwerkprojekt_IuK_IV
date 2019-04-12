@@ -58,6 +58,7 @@ exit
 int vlan 10
 ip address 10.1.10.1 255.255.255.0
 ipv6 address 2001:620:3106:10A0::1/64
+ipv6 address FE80::5 link-local
 no shut
 exit
 
@@ -65,12 +66,31 @@ exit
 int vlan 11
 ip address 10.1.11.1 255.255.255.0
 ipv6 address 2001:620:3106:10b0::1/64
+ipv6 address FE80::5 link-local
 no shut
 exit
 
 int vlan 12
 ip address 10.1.12.1 255.255.255.0
 ipv6 address 2001:620:3106:10c0::1/64
+ipv6 address FE80::5 link-local
+no shut
+exit
+
+!---EIGRP Routing--------------------------------------
+router eigrp 1				
+network 10.1.10.0 0.0.0.255
+network 10.1.11.0 0.0.0.255
+network 10.1.12.0 0.0.0.255 
+network 10.1.0.0 0.0.0.3
+no auto-summary	
+exit
+
+!---IPV6 EIGRP Unicast Routing--------------------------------------
+ipv6 unicast-routing
+
+ipv6 router eigrp 1
+eigrp router-id 5.5.5.5
 no shut
 exit
 
