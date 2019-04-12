@@ -1,0 +1,88 @@
+!-----------------------------------------------------
+!----------Distribution-Switch-Template---------------
+!-----------------------------------------------------
+conf t
+hostname S5
+lin con 0
+logging synchronous
+exit
+no ip domain lookup
+
+
+!----Layer 3 Switches only (no switchport)------------
+interface range g0/1-48
+shutdown
+exit
+ip routing
+
+!----Interfaces-to-Core-------------------------------
+interface g0/13
+no switchport
+ip address 10.1.0.2 255.255.255.252
+ipv6 address 2001:620:3106:1000::2/64
+description "Link to S4 F0/13"
+no shut
+exit
+
+!----VLAN-config--------------------------------------
+vlan 10
+name VLAN_Management
+
+vlan 11
+name VLAN_Verkauf
+
+vlan 12
+name VLAN_Entwicklung
+
+
+!----Interfaces-Acces--Layer--------------------------
+interface g0/17
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S9 G0/1"
+no shut
+exit
+
+interface g0/18
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S9 G0/2"
+no shut
+exit
+
+!---Management-IP-Address-----------------------------
+int vlan 10
+ip address 10.1.10.1 255.255.255.0
+ipv6 address 2001:620:3106:10A0::1/64
+no shut
+exit
+
+!---VLAN-Default-Gateway-Address-----------------------------
+int vlan 11
+ip address 10.1.11.1 255.255.255.0
+ipv6 address 2001:620:3106:10b0::1/64
+no shut
+exit
+
+int vlan 12
+ip address 10.1.12.1 255.255.255.0
+ipv6 address 2001:620:3106:10c0::1/64
+no shut
+exit
+
+!---Link Aggregation---------------------------------
+interface range g0/17-18
+channel-group 1 mode desirable
+
+interface port-channel 1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+
+!---Write conf to startup-----------------------------
+end
+write
