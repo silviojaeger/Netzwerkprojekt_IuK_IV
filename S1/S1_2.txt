@@ -44,7 +44,6 @@ name VLAN_Verkauf
 vlan 12
 name VLAN_Entwicklung
 
-
 !----Interfaces-Access--Layer--------------------------
 interface g0/3
 switchport trunk encapsulation dot1q
@@ -131,6 +130,30 @@ ipv6 unicast-routing
 ipv6 router eigrp 1
 eigrp router-id 1.1.1.1
 no shut
+interface g0/1
+ipv6 eigrp 1
+interface g0/2
+ipv6 eigrp 1
+interface vlan 10
+ipv6 eigrp 1
+interface vlan 11
+ipv6 eigrp 1
+interface vlan 12
+ipv6 eigrp 1
+exit
+
+!---DHCP Relais---------------------------------------
+interface vlan 11
+ip helper-address 10.0.3.1
+exit
+interface vlan 11
+ip helper-address 10.0.3.13
+exit
+interface vlan 12
+ip helper-address 10.0.3.1
+exit
+interface vlan 12
+ip helper-address 10.0.3.13
 exit
 
 !---Write conf to startup-----------------------------
