@@ -1,10 +1,6 @@
 !-----------------------------------------------------
 !----------Layer 3 Core-Switch Template---------------
 !-----------------------------------------------------
-end
-delete flash:vlan.dat
-
-
 conf t
 hostname S3
 lin con 0
@@ -76,6 +72,14 @@ ipv6 unicast-routing
 ipv6 router eigrp 1
 eigrp router-id 3.3.3.3
 no shut
+interface f0/1
+ipv6 eigrp 1
+interface f0/2
+ipv6 eigrp 1
+interface f0/3
+ipv6 eigrp 1
+interface f0/4
+ipv6 eigrp 1
 exit
 
 !---DHCP----------------------------------------------

@@ -73,7 +73,7 @@ network 10.0.3.4 0.0.0.3
 no auto-summary	
 exit
 
-!---IPV6 EIGRP Unicast Routing-------------------------
+!---IPV6 EIGRP Unicast Routing--------------------------------------
 ipv6 unicast-routing
 
 ipv6 router eigrp 1
@@ -91,7 +91,7 @@ interface f0/13
 ipv6 eigrp 1
 exit
 
-!---DHCP-----------------------------------------------
+!---DHCP Server (Redundant mit S3)---------------------
 ip dhcp excluded-address 10.0.11.1 10.0.11.128
 ip dhcp excluded-address 10.0.12.1 10.0.12.128
 ip dhcp excluded-address 10.1.11.1 10.1.11.128
@@ -125,6 +125,6 @@ domain-name entwicklung-sg.com
 lease 30
 exit
 
-!---Write conf to startup------------------------------
+!---Write conf to startup-----------------------------
 end
 write
