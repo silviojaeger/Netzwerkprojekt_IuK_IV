@@ -90,6 +90,9 @@ ipv6 eigrp 1
 interface f0/13
 ipv6 eigrp 1
 exit
+interface l01
+ipv6 eigrp 1
+exit
 
 !---DHCP Server (Redundant mit S3)---------------------
 ip dhcp excluded-address 10.0.11.1 10.0.11.128
@@ -126,25 +129,13 @@ lease 30
 exit
 
 !--DHCPv6 Server (Redundant mit S3) ------------------
-ipv6 dhcp pool Verkauf_Chur_Pool_v6
-address prefix 2001:620:3106:b0::/64 lifetime 2592000 2592000
+ipv6 dhcp pool Stateless_Pool_v6
 dns-server 2001:4860:4860::8888
-domain-name verkauf-chur-v6.com
+domain-name stateless-v6.com
 exit
-ipv6 dhcp pool Entwicklung_Chur_Pool_v6
-address prefix 2001:620:3106:c0::/64 lifetime 2592000 2592000
-dns-server 2001:4860:4860::8888
-domain-name entwicklung-chur-v6.com
-exit
-ipv6 dhcp pool Verkauf_SG_Pool_v6
-address prefix 2001:620:3106:10b0::/64 lifetime 2592000 2592000
-dns-server 2001:4860:4860::8888
-domain-name verkauf-sg-v6.com
-exit
-ipv6 dhcp pool Entwicklung_SG_Pool_v6
-address prefix 2001:620:3106:10c0::/64 lifetime 2592000 2592000
-dns-server 2001:4860:4860::8888
-domain-name entwicklung-sg-v6.com
+
+interface f0/13
+ipv6 dhcp server Stateless_Pool_v6
 exit
 
 !---Write conf to startup-----------------------------
