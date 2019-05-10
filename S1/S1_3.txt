@@ -1,0 +1,172 @@
+!-----------------------------------------------------
+!----------Distribution-Switch-Template---------------
+!-----------------------------------------------------
+conf t
+hostname S1
+lin con 0
+logging synchronous
+exit
+no ip domain lookup
+
+
+!----Layer 3 Switches only (no switchport)------------
+interface range g0/1-48
+shutdown
+exit
+ip routing
+
+!----Interfaces-to-Core-------------------------------
+interface g0/1
+no switchport
+ip address 10.0.3.2 255.255.255.252
+ipv6 address 2001:620:3106:30::2/64
+ipv6 address FE80::1 link-local
+description "Link to S3 F0/3"
+no shut
+exit
+
+interface g0/2
+no switchport
+ip address 10.0.3.14 255.255.255.252
+ipv6 address 2001:620:3106:31::2/64
+ipv6 address FE80::1 link-local
+description "Link to S4 F0/4"
+no shut
+exit
+
+!----VLAN-config--------------------------------------
+vlan 10
+name VLAN_Management
+
+vlan 11
+name VLAN_Verkauf
+
+vlan 12
+name VLAN_Entwicklung
+
+!----Interfaces-Access--Layer--------------------------
+interface g0/3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S2 G0/3"
+no shut
+exit
+
+interface g0/17
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,99
+description "Link to S7 G0/1"
+no shut
+exit
+
+interface g0/18
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,12,99
+description "Link to S8 G0/2"
+no shut
+exit
+
+!---Management-IP-Address-----------------------------
+int vlan 10
+ip address 10.0.10.1 255.255.255.0
+ipv6 address 2001:620:3106:A0::1/64
+ipv6 address FE80::1 link-local
+no shut
+exit
+
+!---First Hop Redundancy-----------------------------
+interface vlan 11
+ip address 10.0.11.2 255.255.255.0
+ipv6 address 2001:620:3106:B0::2/64
+ipv6 address FE80::1 link-local
+exit
+
+interface vlan 11
+standby version 2
+standby 1 ip 10.0.11.1
+standby 1 priority 150
+standby 1 preempt
+exit
+
+interface vlan 12
+ip address 10.0.12.2 255.255.255.0
+ipv6 address 2001:620:3106:C0::2/64
+ipv6 address FE80::1 link-local
+exit
+
+interface vlan 12
+standby version 2
+standby 2 ip 10.0.12.1
+standby 2 priority 100
+standby 2 preempt
+exit
+
+interface vlan 10
+standby version 2
+standby 3 ip 10.0.10.10
+standby 3 priority 150
+standby 3 preempt
+exit
+
+!---EIGRP Routing--------------------------------------
+router eigrp 1				
+network 10.0.10.0 0.0.0.255
+network 10.0.11.0 0.0.0.255
+network 10.0.3.12 0.0.0.3
+network 10.0.12.0 0.0.0.255 
+network 10.0.3.0 0.0.0.3
+no auto-summary	
+exit
+
+!---IPV6 EIGRP Unicast Routing--------------------------------------
+ipv6 unicast-routing
+
+ipv6 router eigrp 1
+eigrp router-id 1.1.1.1
+no shut
+interface g0/1
+ipv6 eigrp 1
+interface g0/2
+ipv6 eigrp 1
+interface vlan 10
+ipv6 eigrp 1
+interface vlan 11
+ipv6 eigrp 1
+interface vlan 12
+ipv6 eigrp 1
+exit
+
+!---DHCP Relais---------------------------------------
+interface vlan 11
+ip helper-address 10.0.3.1
+exit
+interface vlan 11
+ip helper-address 10.0.3.13
+exit
+interface vlan 12
+ip helper-address 10.0.3.1
+exit
+interface vlan 12
+ip helper-address 10.0.3.13
+exit
+
+!---DHCPv6 Relais---------------------------------------
+interface vlan 11
+ipv6 dhcp relay destination 2001:620:3106:90::2
+ipv6 dhcp relay destination 2001:620:3106:90::1
+exit
+interface vlan 12
+ipv6 dhcp relay destination 2001:620:3106:90::2
+ipv6 dhcp relay destination 2001:620:3106:90::1
+exit
+
+!---Write conf to startup-----------------------------
+end
+write
+

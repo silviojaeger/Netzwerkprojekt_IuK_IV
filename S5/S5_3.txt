@@ -1,0 +1,137 @@
+!-----------------------------------------------------
+!----------Distribution-Switch-Template---------------
+!-----------------------------------------------------
+conf t
+hostname S5
+lin con 0
+logging synchronous
+exit
+no ip domain lookup
+
+
+!----Layer 3 Switches only (no switchport)------------
+interface range g0/1-48
+shutdown
+exit
+ip routing
+
+!----Interfaces-to-Core-------------------------------
+interface g0/13
+no switchport
+ip address 10.1.0.2 255.255.255.252
+ipv6 address 2001:620:3106:1000::2/64
+description "Link to S4 F0/13"
+no shut
+exit
+
+!----VLAN-config--------------------------------------
+vlan 10
+name VLAN_Management
+
+vlan 11
+name VLAN_Verkauf
+
+vlan 12
+name VLAN_Entwicklung
+
+
+!----Interfaces-Acces--Layer--------------------------
+interface g0/17
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S9 G0/1"
+no shut
+exit
+
+interface g0/18
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S9 G0/2"
+no shut
+exit
+
+!---Management-IP-Address-----------------------------
+int vlan 10
+ip address 10.1.10.1 255.255.255.0
+ipv6 address 2001:620:3106:10A0::1/64
+ipv6 address FE80::5 link-local
+no shut
+exit
+
+!---VLAN-Default-Gateway-Address-----------------------------
+int vlan 11
+ip address 10.1.11.1 255.255.255.0
+ipv6 address 2001:620:3106:10b0::1/64
+ipv6 address FE80::5 link-local
+no shut
+exit
+
+int vlan 12
+ip address 10.1.12.1 255.255.255.0
+ipv6 address 2001:620:3106:10c0::1/64
+ipv6 address FE80::5 link-local
+no shut
+exit
+
+!---EIGRP Routing--------------------------------------
+router eigrp 1				
+network 10.1.10.0 0.0.0.255
+network 10.1.11.0 0.0.0.255
+network 10.1.12.0 0.0.0.255 
+network 10.1.0.0 0.0.0.3
+no auto-summary	
+exit
+
+!---IPV6 EIGRP Unicast Routing--------------------------------------
+ipv6 unicast-routing
+
+ipv6 router eigrp 1
+eigrp router-id 5.5.5.5
+no shut
+interface g0/13
+ipv6 eigrp 1
+interface vlan 10
+ipv6 eigrp 1
+interface vlan 11
+ipv6 eigrp 1
+interface vlan 12
+ipv6 eigrp 1
+exit
+
+!---Link Aggregation---------------------------------
+interface range g0/17-18
+channel-group 1 mode desirable
+
+interface port-channel 1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+
+!---DHCP Relais---------------------------------------
+interface vlan 11
+ip helper-address 10.1.0.1
+exit
+interface vlan 12
+ip helper-address 10.1.0.1
+exit
+
+
+!---DHCPv6 Relais---------------------------------------
+interface vlan 11
+ipv6 dhcp relay destination 2001:620:3106:90::2
+ipv6 dhcp relay destination 2001:620:3106:90::1
+exit
+interface vlan 12
+ipv6 dhcp relay destination 2001:620:3106:90::2
+ipv6 dhcp relay destination 2001:620:3106:90::1
+exit
+
+
+
+!---Write conf to startup-----------------------------
+end
+write
