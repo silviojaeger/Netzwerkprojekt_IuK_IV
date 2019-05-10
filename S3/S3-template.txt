@@ -60,7 +60,7 @@ ip address 10.0.9.1 255.255.255.255
 ipv6 address 2001:620:3106:90::1/128
 exit
 
-!---EIGRP Routing--------------------------------------
+!---EIGRP Routing-------------------------------------
 router eigrp 1				
 network 10.0.3.8 0.0.0.3		
 network 10.0.9.1 0.0.0.3
@@ -70,12 +70,50 @@ network 10.0.1.4 0.0.0.3
 no auto-summary	
 exit
 
-!---IPV6 EIGRP Unicast Routing--------------------------------------
+!---IPV6 EIGRP Unicast Routing------------------------
 ipv6 unicast-routing
 
 ipv6 router eigrp 1
 eigrp router-id 3.3.3.3
 no shut
+exit
+
+!---DHCP----------------------------------------------
+ip dhcp excluded-address 10.0.11.1 10.0.11.9
+ip dhcp excluded-address 10.0.11.128 10.0.11.255
+ip dhcp excluded-address 10.0.12.1 10.0.12.9
+ip dhcp excluded-address 10.0.12.128 10.0.12.255
+ip dhcp excluded-address 10.1.11.1 10.1.11.9
+ip dhcp excluded-address 10.1.11.128 10.1.11.255
+ip dhcp excluded-address 10.1.12.1 10.1.12.9
+ip dhcp excluded-address 10.1.12.128 10.1.12.255
+ip dhcp pool Verkauf_Chur_Pool
+network 10.0.11.0 255.255.255.0
+default-router 10.0.11.1
+dns-server 8.8.8.8
+domain-name verkauf-chur.com
+lease 30
+exit
+ip dhcp pool Entwicklung_Chur_Pool
+network 10.0.12.0 255.255.255.0
+default-router 10.0.12.1
+dns-server 8.8.8.8
+domain-name entwicklung-chur.com
+lease 30
+exit
+ip dhcp pool Verkauf_SG_Pool
+network 10.1.11.0 255.255.255.0
+default-router 10.1.11.1
+dns-server 8.8.8.8
+domain-name verkauf-sg.com
+lease 30
+exit
+ip dhcp pool Entwicklung_SG_Pool
+network 10.1.12.0 255.255.255.0
+default-router 10.1.12.1
+dns-server 8.8.8.8
+domain-name entwicklung-sg.com
+lease 30
 exit
 
 !---Write conf to startup-----------------------------
