@@ -134,6 +134,14 @@ dns-server 2001:4860:4860::8888
 domain-name stateless-v6.com
 exit
 
+interface f0/3
+ipv6 dhcp server Stateless_Pool_v6
+exit
+
+interface f0/4
+ipv6 dhcp server Stateless_Pool_v6
+exit
+
 interface f0/13
 ipv6 dhcp server Stateless_Pool_v6
 exit
