@@ -7,6 +7,8 @@ lin con 0
 logging synchronous
 exit
 no ip domain lookup
+spanning-tree portfast default
+
 
 !----VLAN-config--------------------------------------
 vlan 10
