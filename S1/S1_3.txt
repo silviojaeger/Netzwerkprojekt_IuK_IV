@@ -160,10 +160,12 @@ exit
 interface vlan 11
 ipv6 dhcp relay destination 2001:620:3106:90::2
 ipv6 dhcp relay destination 2001:620:3106:90::1
+ipv6 nd other-config-flag
 exit
 interface vlan 12
 ipv6 dhcp relay destination 2001:620:3106:90::2
 ipv6 dhcp relay destination 2001:620:3106:90::1
+ipv6 nd other-config-flag
 exit
 
 !---Write conf to startup-----------------------------
