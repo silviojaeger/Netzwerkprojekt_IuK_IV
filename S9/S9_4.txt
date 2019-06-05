@@ -9,38 +9,25 @@ exit
 no ip domain lookup
 spanning-tree portfast default
 
-configure terminal
 lin con 0
 logging synchronous
 password 5w3V2zqFvSpP
 login
 exit
-exit
 
-config t
 enable secret ve4brDtUSBsz
-exit
 
-configure terminal
 lin vty 0
 password d9MXtAnKQD82
 login
 exit
-exit
 
-
-
-conf t
 banner motd #
 Only permitted access allowed! #
-end
 
-conf t
 service password-encryption
 login block-for 120 attempts 3 within 60
-end
 
-conf t
 ip domain-name IKS2019.com
 crypto key generate rsa 
 1024
@@ -52,8 +39,6 @@ exit
 ip ssh version 2
 ip ssh time-out 60
 ip ssh authentication-retries 2
-end
-
 
 !----VLAN-config--------------------------------------
 vlan 10
