@@ -1,0 +1,191 @@
+Current configuration : 2965 bytes
+!
+! Last configuration change at 11:19:18 UTC Wed Jun 5 2019
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$suZD$atzxIAoGgSxBgBX/IBd6y/
+!
+no aaa new-model
+ethernet lmi ce
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip domain name IKS2019.com
+ip cef
+login block-for 120 attempts 3 within 60
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+license udi pid CISCO2901/K9 sn FCZ182591GM
+license boot module c2900 technology-package datak9
+!
+!
+username sshAdmin secret 5 $1$uxiC$H0mUxTjbIsucSdu1HWTap0
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 10.0.9.0 255.255.255.255
+ ipv6 address 2001:620:3106:90::/128
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ description Link to FireWall F0/1
+ ip address 195.176.242.6 255.255.255.240
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:620:100:1001::6/64
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet0/1/0
+ description Link to S3 F0/1
+ ip address 10.0.1.5 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:620:3106:10::1/64
+ ipv6 eigrp 1
+!
+interface FastEthernet0/1/1
+ description Link to S4 F0/1
+ ip address 10.0.1.1 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:620:3106:11::1/64
+ ipv6 eigrp 1
+!
+!
+!
+router eigrp 1
+ network 10.0.1.0 0.0.0.3
+ network 10.0.1.4 0.0.0.3
+ redistribute static
+ passive-interface GigabitEthernet0/0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip nat pool public_access 195.176.242.97 195.176.242.97 netmask 255.255.255.240
+ip nat inside source list 1 pool public_access overload
+ip route 0.0.0.0 0.0.0.0 195.176.242.14
+ip ssh time-out 60
+ip ssh authentication-retries 2
+ip ssh version 2
+!
+!
+ipv6 route ::/0 2001:620:100:1001::FFFF
+ipv6 route ::/0 GigabitEthernet0/0
+ipv6 router eigrp 1
+ eigrp router-id 9.9.9.9
+ redistribute static
+!
+!
+!
+access-list 1 permit 10.0.0.0 0.255.255.255
+!
+control-plane
+!
+!
+banner motd ^C
+Only permitted access allowed! ^C
+!
+line con 0
+ password 7 040E1C553973565F2F0F360722
+ logging synchronous
+ login
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0
+ password 7 104A50343D03330527350E7376
+ login local
+ transport input ssh
+line vty 1 4
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+!
+end
