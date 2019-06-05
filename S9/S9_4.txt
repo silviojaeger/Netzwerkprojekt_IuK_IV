@@ -1,0 +1,133 @@
+!-----------------------------------------------------
+!---------------Access-Switch-Template----------------
+!-----------------------------------------------------
+conf t
+hostname S9
+lin con 0
+logging synchronous
+exit
+no ip domain lookup
+spanning-tree portfast default
+
+configure terminal
+lin con 0
+logging synchronous
+password 5w3V2zqFvSpP
+login
+exit
+exit
+
+config t
+enable secret ve4brDtUSBsz
+exit
+
+configure terminal
+lin vty 0
+password d9MXtAnKQD82
+login
+exit
+exit
+
+
+
+conf t
+banner motd #
+Only permitted access allowed! #
+end
+
+conf t
+service password-encryption
+login block-for 120 attempts 3 within 60
+end
+
+conf t
+ip domain-name IKS2019.com
+crypto key generate rsa 
+1024
+username sshAdmin secret 7khm2rYqQ5cZ
+line vty 0 4
+transport input ssh
+login local
+exit
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 2
+end
+
+
+!----VLAN-config--------------------------------------
+vlan 10
+name VLAN_Management
+
+vlan 11
+name VLAN_Verkauf
+
+vlan 12
+name VLAN_Entwicklung
+
+!----Interfaces-Distribution-Layer--------------------------
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S5 G0/17"
+no shut
+exit
+
+interface g0/2
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+description "Link to S5 G0/18"
+no shut
+exit
+
+int range f0/1-10
+switchport mode access
+switchport access vlan 11
+switchport port-security
+switchport port-security mac-address sticky
+switchport port-security maximum 1
+switchport port-security violation shutdown
+no shut
+exit
+
+int range f0/13-22
+switchport mode access
+switchport access vlan 12
+switchport port-security
+switchport port-security mac-address sticky
+switchport port-security maximum 1
+switchport port-security violation shutdown
+no shut
+exit
+
+int range f0/11-12
+shut
+
+int range f0/23-24
+shut
+exit
+
+!---Management-IP-Address-----------------------------
+int vlan 10
+ip address 10.1.10.2 255.255.255.0
+ipv6 address 2001:620:3106:10A0::2/64
+no shut
+exit
+
+!---Link Aggregation---------------------------------
+interface range g0/1-2
+channel-group 1 mode desirable
+
+interface port-channel 1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,11,12,99
+exit
+
+port-channel load-balance src-dst-ip
+
+!---Write conf to startup-----------------------------
+end
+write
