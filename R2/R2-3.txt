@@ -1,0 +1,128 @@
+!-----------------------------------------------------
+!---------Router Enterprise Edge Template-------------
+!-----------------------------------------------------
+conf t
+ho R2
+lin con 0
+logging synchronous
+speed 9600
+exit
+no ip domain lookup
+
+lin con 0
+logging synchronous
+password 5w3V2zqFvSpP
+login
+exit
+
+enable secret ve4brDtUSBsz
+
+lin vty 0
+password d9MXtAnKQD82
+login
+exit
+
+banner motd #
+Only permitted access allowed! #
+
+service password-encryption
+login block-for 120 attempts 3 within 60
+
+ip domain-name IKS2019.com
+crypto key generate rsa 
+1024
+username sshAdmin secret 7khm2rYqQ5cZ
+line vty 0 4
+transport input ssh
+login local
+exit
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 2
+!-----------------------------------------------------
+
+
+interface GigabitEthernet0/0
+ description Link to FireWall F0/1
+ ip address 195.176.242.6 255.255.255.240
+ duplex auto
+ speed auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:620:100:1001::6/64
+ no shut
+
+interface G0/1
+shutdown
+ 
+interface FastEthernet0/1/0
+ description Link to S3 F0/1
+ ip address 10.0.1.5 255.255.255.252
+ duplex auto
+ speed auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:620:3106:10::1/64
+ no shut
+
+interface FastEthernet0/1/1
+ description Link to S4 F0/1
+ ip address 10.0.1.1 255.255.255.252
+ duplex auto
+ speed auto
+ ipv6 address FE80::9 link-local
+ ipv6 address 2001:620:3106:11::1/64
+ no shut
+exit
+
+!---Loopbak--------------------------------------------
+interface Loopback1
+ip address 10.0.9.0 255.255.255.255
+ipv6 address 2001:620:3106:90::/128
+no shut
+exit
+
+!---EIGRP Routing--------------------------------------
+router eigrp 1				
+network 10.0.1.0 0.0.0.3		
+network 10.0.1.4 0.0.0.3
+passive-interface G0/0
+no auto-summary	
+exit
+
+!---Static Route---------------------------------------
+ip route 0.0.0.0 0.0.0.0 195.176.242.14
+ipv6 route ::0/0 2001:620:100:1001::FFFF
+router eigrp 1
+redistribute static
+exit
+
+!---IPV6 EIGRP Unicast Routing-------------------------
+ipv6 unicast-routing
+
+ipv6 router eigrp 1
+eigrp router-id 9.9.9.9
+no shut
+redistribute static
+interface f0/1/0
+ipv6 eigrp 1
+interface f0/1/1
+ipv6 eigrp 1
+exit
+
+!---PAT-----------------------------------------------
+access-list 1 permit 10.0.0.0 0.255.255.255
+ip nat pool public_access 195.176.242.97 195.176.242.97 netmask 255.255.255.240	
+
+ip nat inside source list 1 pool public_access overload		
+
+interface f0/1/0
+ip nat inside
+interface f0/1/1
+ip nat inside
+interface g0/0
+ip nat outside
+exit
+
+
+!---Write conf to startup-----------------------------
+end
+write

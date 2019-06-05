@@ -1,0 +1,177 @@
+!-----------------------------------------------------
+!----------Layer 3 Core-Switch Template---------------
+!-----------------------------------------------------
+conf t
+hostname S3
+lin con 0
+logging synchronous
+speed 9600
+exit
+no ip domain lookup
+
+lin con 0
+logging synchronous
+password 5w3V2zqFvSpP
+login
+exit
+
+enable secret ve4brDtUSBsz
+
+lin vty 0
+password d9MXtAnKQD82
+login
+exit
+
+banner motd #
+Only permitted access allowed! #
+
+service password-encryption
+login block-for 120 attempts 3 within 60
+
+ip domain-name IKS2019.com
+crypto key generate rsa 
+1024
+username sshAdmin secret 7khm2rYqQ5cZ
+line vty 0 4
+transport input ssh
+login local
+exit
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 2
+
+!----Layer 3 Switches only (no switchport)------------
+interface range f0/1-24
+no switchport
+shutdown
+exit
+ip routing
+
+!-----------------------------------------------------
+interface f0/1
+ip address 10.0.1.6 255.255.255.252
+ipv6 address 2001:620:3106:10::2/64
+ipv6 address FE80::3 link-local
+description "Link to R2 F0/1/0"
+no shut
+exit
+
+interface f0/2
+ip address 10.0.2.1 255.255.255.252
+ipv6 address 2001:620:3106:20::1/64
+ipv6 address FE80::3 link-local
+description "Link to S4 F0/2"
+no shut
+exit
+
+interface f0/3
+ip address 10.0.3.1 255.255.255.252
+ipv6 address 2001:620:3106:30::1/64
+ipv6 address FE80::3 link-local
+description "Link to S1 G0/1"
+no shut
+exit
+
+interface f0/4
+ip address 10.0.3.9 255.255.255.252
+ipv6 address 2001:620:3106:32::1/64
+ipv6 address FE80::3 link-local
+description "Link to S2 G0/2"
+no shut
+exit
+
+!---Loopbak-------------------------------------------
+interface loopback 1
+ip address 10.0.9.1 255.255.255.255
+ipv6 address 2001:620:3106:90::1/128
+exit
+
+!---EIGRP Routing--------------------------------------
+router eigrp 1				
+network 10.0.3.8 0.0.0.3		
+network 10.0.9.1 0.0.0.3
+network 10.0.2.0 0.0.0.3
+network 10.0.3.0 0.0.0.3
+network 10.0.1.4 0.0.0.3
+no auto-summary	
+exit
+
+!---IPV6 EIGRP Unicast Routing--------------------------------------
+ipv6 unicast-routing
+
+ipv6 router eigrp 1
+eigrp router-id 3.3.3.3
+no shut
+interface f0/1
+ipv6 eigrp 1
+interface f0/2
+ipv6 eigrp 1
+interface f0/3
+ipv6 eigrp 1
+interface f0/4
+ipv6 eigrp 1
+exit
+interface l01
+ipv6 eigrp 1
+exit
+
+!---DHCP Server (Redundant mit S4)---------------------
+ip dhcp excluded-address 10.0.11.1 10.0.11.9
+ip dhcp excluded-address 10.0.11.128 10.0.11.255
+ip dhcp excluded-address 10.0.12.1 10.0.12.9
+ip dhcp excluded-address 10.0.12.128 10.0.12.255
+ip dhcp excluded-address 10.1.11.1 10.1.11.9
+ip dhcp excluded-address 10.1.11.128 10.1.11.255
+ip dhcp excluded-address 10.1.12.1 10.1.12.9
+ip dhcp excluded-address 10.1.12.128 10.1.12.255
+ip dhcp pool Verkauf_Chur_Pool
+network 10.0.11.0 255.255.255.0
+default-router 10.0.11.1
+dns-server 8.8.8.8
+domain-name verkauf-chur.com
+lease 30
+exit
+ip dhcp pool Entwicklung_Chur_Pool
+network 10.0.12.0 255.255.255.0
+default-router 10.0.12.1
+dns-server 8.8.8.8
+domain-name entwicklung-chur.com
+lease 30
+exit
+ip dhcp pool Verkauf_SG_Pool
+network 10.1.11.0 255.255.255.0
+default-router 10.1.11.1
+dns-server 8.8.8.8
+domain-name verkauf-sg.com
+lease 30
+exit
+ip dhcp pool Entwicklung_SG_Pool
+network 10.1.12.0 255.255.255.0
+default-router 10.1.12.1
+dns-server 8.8.8.8
+domain-name entwicklung-sg.com
+lease 30
+exit
+
+
+--DHCPv6 Server (Redundant mit S4) ------------------
+ipv6 dhcp pool Stateless_Pool_v6
+dns-server 2001:4860:4860::8888
+domain-name stateless-v6.com
+exit
+
+interface f0/2
+ipv6 dhcp server Stateless_Pool_v6
+exit
+
+interface f0/3
+ipv6 dhcp server Stateless_Pool_v6
+exit
+
+interface f0/4
+ipv6 dhcp server Stateless_Pool_v6
+exit
+
+!---Write conf to startup-----------------------------
+end
+write
