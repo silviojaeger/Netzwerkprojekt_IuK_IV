@@ -1,0 +1,295 @@
+Current configuration : 6373 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname S4
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$JFMK$VWV87TtbnelfiNiuUcTHh0
+!
+username sshAdmin secret 5 $1$nyr6$TTkIQfQNFR/pWwUw.JPZm0
+!
+!
+no aaa new-model
+system mtu routing 1500
+ip routing
+no ip domain-lookup
+ip domain-name IKS2019.com
+ip dhcp excluded-address 10.0.11.1 10.0.11.128
+ip dhcp excluded-address 10.0.12.1 10.0.12.128
+ip dhcp excluded-address 10.1.11.1 10.1.11.128
+ip dhcp excluded-address 10.1.12.1 10.1.12.128
+!
+ip dhcp pool Verkauf_Chur_Pool
+   network 10.0.11.0 255.255.255.0
+   default-router 10.0.11.1
+   dns-server 8.8.8.8
+   domain-name verkauf-chur.com
+   lease 30
+!
+ip dhcp pool Entwicklung_Chur_Pool
+   network 10.0.12.0 255.255.255.0
+   default-router 10.0.12.1
+   dns-server 8.8.8.8
+   domain-name entwicklung-chur.com
+   lease 30
+!
+ip dhcp pool Verkauf_SG_Pool
+   network 10.1.11.0 255.255.255.0
+   default-router 10.1.11.1
+   dns-server 8.8.8.8
+   domain-name verkauf-sg.com
+   lease 30
+!
+ip dhcp pool Entwicklung_SG_Pool
+   network 10.1.12.0 255.255.255.0
+   default-router 10.1.12.1
+   dns-server 8.8.8.8
+   domain-name entwicklung-sg.com
+   lease 30
+!
+!
+login block-for 120 attempts 3 within 60
+ipv6 unicast-routing
+ipv6 dhcp pool Stateless_Pool_v6
+ dns-server 2001:4860:4860::8888
+ domain-name stateless-v6.com
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2313607040
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2313607040
+ revocation-check none
+ rsakeypair TP-self-signed-2313607040
+!
+!
+crypto pki certificate chain TP-self-signed-2313607040
+ certificate self-signed 01
+  3082023B 308201A4 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 32333133 36303730 3430301E 170D3933 30333031 30303030
+  35395A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 33313336
+  30373034 3030819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281
+  8100C64C 9C0B70A4 5F8C814E 3E3F8F79 C5AA97C0 6078E6C4 09F67E21 F000CCE2
+  D2B348DF 3CAB16A5 96B91679 F2F03EC8 F47A702C 77454046 CF19F57F 730870C2
+  BA8ECAD8 E4AD4CC3 91D47EE9 F705A73A 0B7E2105 0D0A9253 199E0B3C 6299753E
+  C1876FF2 08F2C12F E0092E95 EE1FF799 4D793CC7 E0AE098B 7A90EB4F 7249DD33
+  21E70203 010001A3 63306130 0F060355 1D130101 FF040530 030101FF 300E0603
+  551D1104 07300582 0353342E 301F0603 551D2304 18301680 14D544BE E5A8371C
+  92CF6A37 E1D50BC3 DC99F2C1 84301D06 03551D0E 04160414 D544BEE5 A8371C92
+  CF6A37E1 D50BC3DC 99F2C184 300D0609 2A864886 F70D0101 04050003 81810016
+  1BFF9CAF AB130895 AD9424D4 4E2FC5BE F405BF9E EDFD5002 F4429747 C4D60C36
+  F648CD11 0285498C 9C3CDBA5 4D12ECFD 6F5F8401 3362AB8A E06B6224 15CADA20
+  4CDACDE5 3BD31221 38D45F25 7C4AAF8A 84C4C270 160D07C3 A1305738 255D5D92
+  FB76DCC5 AF37B61D 1133DD31 47F3AD36 8158F4E6 1DB3DC67 8079A402 FC6846
+  quit
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh time-out 60
+ip ssh authentication-retries 2
+ip ssh version 2
+!
+!
+!
+interface Loopback1
+ ip address 10.0.9.2 255.255.255.255
+ ipv6 address 2001:620:3106:90::2/128
+ ipv6 eigrp 1
+!
+interface FastEthernet0/1
+ description "Link to R2 F0/1/1"
+ no switchport
+ ip address 10.0.1.2 255.255.255.252
+ ipv6 address FE80::4 link-local
+ ipv6 address 2001:620:3106:11::2/64
+ ipv6 eigrp 1
+!
+interface FastEthernet0/2
+ description "Link to S3 F0/2"
+ no switchport
+ ip address 10.0.2.2 255.255.255.252
+ ipv6 address FE80::4 link-local
+ ipv6 address 2001:620:3106:20::2/64
+ ipv6 eigrp 1
+!
+interface FastEthernet0/3
+ description "Link to S2 G0/1"
+ no switchport
+ ip address 10.0.3.5 255.255.255.252
+ ipv6 address FE80::4 link-local
+ ipv6 address 2001:620:3106:33::1/64
+ ipv6 dhcp server Stateless_Pool_v6
+ ipv6 eigrp 1
+!
+interface FastEthernet0/4
+ description "Link to S1 G0/2"
+ no switchport
+ ip address 10.0.3.13 255.255.255.252
+ ipv6 address FE80::4 link-local
+ ipv6 address 2001:620:3106:31::1/64
+ ipv6 dhcp server Stateless_Pool_v6
+ ipv6 eigrp 1
+!
+interface FastEthernet0/5
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/6
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/7
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/8
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/9
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/10
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/11
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/12
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/13
+ description "Link to S5 G0/13"
+ no switchport
+ ip address 10.1.0.1 255.255.255.252
+ ipv6 address FE80::4 link-local
+ ipv6 address 2001:620:3106:1000::1/64
+ ipv6 dhcp server Stateless_Pool_v6
+ ipv6 eigrp 1
+!
+interface FastEthernet0/14
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/15
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/16
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/17
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/18
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/19
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/20
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/21
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/22
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/23
+ no switchport
+ no ip address
+ shutdown
+!
+interface FastEthernet0/24
+ no switchport
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+ no ip address
+!
+!
+router eigrp 1
+ network 10.0.1.0 0.0.0.3
+ network 10.0.2.0 0.0.0.3
+ network 10.0.3.4 0.0.0.3
+ network 10.0.3.12 0.0.0.3
+ network 10.1.0.0 0.0.0.3
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+ipv6 router eigrp 1
+ eigrp router-id 4.4.4.4
+!
+!
+!
+!
+banner motd ^C
+Only permitted access allowed! ^C
+!
+line con 0
+ password 7 124C1244245916150C3D173803
+ logging synchronous
+ login
+line vty 0
+ password 7 02025D7633122E2F677F2D4157
+ login local
+ transport input ssh
+line vty 1 4
+ login local
+ transport input ssh
+line vty 5 15
+ login
+!
+end

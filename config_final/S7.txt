@@ -1,0 +1,335 @@
+Current configuration : 7720 bytes
+!
+! Last configuration change at 00:55:18 UTC Mon Mar 1 1993
+!
+version 15.0
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname S7
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$WmQM$VRxOgQZRzsLW3qJiOTEWr1
+!
+username sshAdmin secret 5 $1$xQ/V$KgxhwclXxC1zfLQFMB1fh0
+no aaa new-model
+system mtu routing 1536
+!
+!
+no ip domain-lookup
+ip domain-name IKS2019.com
+login block-for 120 attempts 3 within 60
+!
+!
+crypto pki trustpoint TP-self-signed-3092675584
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3092675584
+ revocation-check none
+ rsakeypair TP-self-signed-3092675584
+!
+!
+crypto pki certificate chain TP-self-signed-3092675584
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33303932 36373535 3834301E 170D3933 30333031 30303030
+  35395A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 30393236
+  37353538 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281
+  8100CB3C CEBA87B3 87044018 FEF486D0 A9B8FCEF F14F0E04 E33531C3 7E3D239A
+  FA59F2E3 F6278432 114CE0AC 6B13EE44 0BC36622 AD7F82E8 3131E229 BF3201F3
+  1F4FA9BD C6C20262 B14A03D4 96B931A0 116FA828 5959EC41 6E07D03F 60193FB5
+  727D62EA A1E4C0ED 2CAC9889 DB533E7F 8F8EA410 E257FAC5 1E35C763 36A324DC
+  09D70203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603
+  551D2304 18301680 14FC2B41 0CD366B5 12D4C681 F5CA1C5E 81E0F79F B8301D06
+  03551D0E 04160414 FC2B410C D366B512 D4C681F5 CA1C5E81 E0F79FB8 300D0609
+  2A864886 F70D0101 05050003 81810042 F44E6E30 DCE47AA5 73FFDF03 02C31D00
+  403E0AA1 E8D97B4C 8E630B09 F687354D AC76EFE3 65C86ACC ED3DADAF F486786B
+  8F15B439 88194BA5 BD0BFCA0 D04D76B7 6CD2B75A 500F1145 E9D96FC2 A19ECD6C
+  BA3386CE 489C55BD CA6210C8 923A7A02 57B3BB70 770CD549 DDFC8200 61A3ECF1
+  59E89BA6 6016FD3B 3CEC487E 77007B
+        quit
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh time-out 60
+ip ssh authentication-retries 2
+ip ssh version 2
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/2
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/3
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/4
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/5
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/6
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/7
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/8
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/9
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/10
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/11
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/12
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/13
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/14
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/15
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/16
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/17
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/18
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/19
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/20
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/21
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/22
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/23
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/24
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/25
+ switchport access vlan 11
+ switchport mode access
+ switchport port-security mac-address sticky
+ switchport port-security
+!
+interface FastEthernet0/26
+ shutdown
+!
+interface FastEthernet0/27
+ shutdown
+!
+interface FastEthernet0/28
+ shutdown
+!
+interface FastEthernet0/29
+ shutdown
+!
+interface FastEthernet0/30
+ shutdown
+!
+interface FastEthernet0/31
+ shutdown
+!
+interface FastEthernet0/32
+ shutdown
+!
+interface FastEthernet0/33
+ shutdown
+!
+interface FastEthernet0/34
+ shutdown
+!
+interface FastEthernet0/35
+ shutdown
+!
+interface FastEthernet0/36
+ shutdown
+!
+interface FastEthernet0/37
+ shutdown
+!
+interface FastEthernet0/38
+ shutdown
+!
+interface FastEthernet0/39
+ shutdown
+!
+interface FastEthernet0/40
+ shutdown
+!
+interface FastEthernet0/41
+ shutdown
+!
+interface FastEthernet0/42
+ shutdown
+!
+interface FastEthernet0/43
+ shutdown
+!
+interface FastEthernet0/44
+ shutdown
+!
+interface FastEthernet0/45
+ shutdown
+!
+interface FastEthernet0/46
+ shutdown
+!
+interface FastEthernet0/47
+ shutdown
+!
+interface FastEthernet0/48
+ shutdown
+!
+interface GigabitEthernet0/1
+ description "Link to S1 G0/17"
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,11,99
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ description "Link to S2 G0/18"
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,11,99
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 10.0.10.3 255.255.255.0
+ ipv6 address 2001:620:3106:A0::2/128
+!
+ip http server
+ip http secure-server
+!
+!
+!
+banner motd ^C
+Only permitted access allowed! ^C
+!
+line con 0
+ password 7 03514C58305D3B5D681F2A1527
+ logging synchronous
+ login
+line vty 0
+ password 7 094817242111361C203D207279
+ login local
+ transport input ssh
+line vty 1 4
+ login local
+ transport input ssh
+line vty 5 15
+ login
+!
+end

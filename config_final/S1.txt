@@ -1,0 +1,326 @@
+Current configuration : 6804 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname S1
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$ZL2B$m2x.LbnIi9hmdJz5df265/
+!
+username sshAdmin secret 5 $1$4Fpq$iqcDnMQYBPoegQxWpHgoi.
+!
+!
+no aaa new-model
+system mtu routing 1500
+ip routing
+no ip domain-lookup
+ip domain-name IKS2019.com
+!
+!
+login block-for 120 attempts 3 within 60
+ipv6 unicast-routing
+!
+!
+crypto pki trustpoint TP-self-signed-3869017088
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3869017088
+ revocation-check none
+ rsakeypair TP-self-signed-3869017088
+!
+!
+crypto pki certificate chain TP-self-signed-3869017088
+ certificate self-signed 01
+  3082023B 308201A4 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33383639 30313730 3838301E 170D3933 30333031 30303032
+  35365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 38363930
+  31373038 3830819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281
+  8100F687 BF1F1657 FDCE0BB4 43196E2B AF07F040 D538A6EF E9DEBAB1 9108D391
+  39D0F5C9 318BE38C 7F8F7A81 32907891 4A3930B3 6DA7CA2A 89285BF6 AC368E4F
+  D594D0AC E028E61A 3CAC8253 4EF47958 763B4015 0FEEC72B AE6B10AD 9F5501F6
+  EA917998 F9FB8818 53314D1D 700AB2F7 FBBF43E4 1DCF2C0B 9C2B58AF D2510A54
+  36A70203 010001A3 63306130 0F060355 1D130101 FF040530 030101FF 300E0603
+  551D1104 07300582 0353312E 301F0603 551D2304 18301680 14E91DFF D8C65EA6
+  2B71F82E 11FE972B FDDB5B9A 51301D06 03551D0E 04160414 E91DFFD8 C65EA62B
+  71F82E11 FE972BFD DB5B9A51 300D0609 2A864886 F70D0101 04050003 818100D3
+  1A5DC75D CA4A2ECA 448FE8E8 1FB82523 515A4B34 803FFF23 4D8AD2C7 BA18160C
+  7B6AB430 6A668BCC 88CCFA2E 095B41BA D5261302 F5127971 47EFF296 C5835FA8
+  0DDF69D2 71EC2AC2 1FE24AA7 4A9A5E20 FAF1617F 37EA9FA3 F865641D 0C1A7C3E
+  D7AED28E B9139F2D BE0D937D D9EAAFD1 D435E377 41CF5F58 D443A8F2 325803
+  quit
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh time-out 60
+ip ssh authentication-retries 2
+ip ssh version 2
+!
+!
+!
+interface GigabitEthernet0/1
+ description "Link to S3 F0/3"
+ no switchport
+ ip address 10.0.3.2 255.255.255.252
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:620:3106:30::2/64
+ ipv6 eigrp 1
+!
+interface GigabitEthernet0/2
+ description "Link to S4 F0/4"
+ no switchport
+ ip address 10.0.3.14 255.255.255.252
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:620:3106:31::2/64
+ ipv6 eigrp 1
+!
+interface GigabitEthernet0/3
+ description "Link to S2 G0/3"
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10-12,99
+ switchport mode trunk
+!
+interface GigabitEthernet0/4
+ shutdown
+!
+interface GigabitEthernet0/5
+ shutdown
+!
+interface GigabitEthernet0/6
+ shutdown
+!
+interface GigabitEthernet0/7
+ shutdown
+!
+interface GigabitEthernet0/8
+ shutdown
+!
+interface GigabitEthernet0/9
+ shutdown
+!
+interface GigabitEthernet0/10
+ shutdown
+!
+interface GigabitEthernet0/11
+ shutdown
+!
+interface GigabitEthernet0/12
+ shutdown
+!
+interface GigabitEthernet0/13
+ shutdown
+!
+interface GigabitEthernet0/14
+ shutdown
+!
+interface GigabitEthernet0/15
+ shutdown
+!
+interface GigabitEthernet0/16
+ shutdown
+!
+interface GigabitEthernet0/17
+ description "Link to S7 G0/1"
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,11,99
+ switchport mode trunk
+!
+interface GigabitEthernet0/18
+ description "Link to S8 G0/2"
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,12,99
+ switchport mode trunk
+!
+interface GigabitEthernet0/19
+ shutdown
+!
+interface GigabitEthernet0/20
+ shutdown
+!
+interface GigabitEthernet0/21
+ shutdown
+!
+interface GigabitEthernet0/22
+ shutdown
+!
+interface GigabitEthernet0/23
+ shutdown
+!
+interface GigabitEthernet0/24
+ shutdown
+!
+interface GigabitEthernet0/25
+ shutdown
+!
+interface GigabitEthernet0/26
+ shutdown
+!
+interface GigabitEthernet0/27
+ shutdown
+!
+interface GigabitEthernet0/28
+ shutdown
+!
+interface GigabitEthernet0/29
+ shutdown
+!
+interface GigabitEthernet0/30
+ shutdown
+!
+interface GigabitEthernet0/31
+ shutdown
+!
+interface GigabitEthernet0/32
+ shutdown
+!
+interface GigabitEthernet0/33
+ shutdown
+!
+interface GigabitEthernet0/34
+ shutdown
+!
+interface GigabitEthernet0/35
+ shutdown
+!
+interface GigabitEthernet0/36
+ shutdown
+!
+interface GigabitEthernet0/37
+ shutdown
+!
+interface GigabitEthernet0/38
+ shutdown
+!
+interface GigabitEthernet0/39
+ shutdown
+!
+interface GigabitEthernet0/40
+ shutdown
+!
+interface GigabitEthernet0/41
+ shutdown
+!
+interface GigabitEthernet0/42
+ shutdown
+!
+interface GigabitEthernet0/43
+ shutdown
+!
+interface GigabitEthernet0/44
+ shutdown
+!
+interface GigabitEthernet0/45
+ shutdown
+!
+interface GigabitEthernet0/46
+ shutdown
+!
+interface GigabitEthernet0/47
+ shutdown
+!
+interface GigabitEthernet0/48
+ shutdown
+!
+interface GigabitEthernet0/49
+!
+interface GigabitEthernet0/50
+!
+interface GigabitEthernet0/51
+!
+interface GigabitEthernet0/52
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 10.0.10.1 255.255.255.0
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:620:3106:A0::1/64
+ ipv6 eigrp 1
+ standby version 2
+ standby 3 ip 10.0.10.10
+ standby 3 priority 150
+ standby 3 preempt
+!
+interface Vlan11
+ ip address 10.0.11.2 255.255.255.0
+ ip helper-address 10.0.3.1
+ ip helper-address 10.0.3.13
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:620:3106:B0::2/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2001:620:3106:90::2
+ ipv6 dhcp relay destination 2001:620:3106:90::1
+ ipv6 eigrp 1
+ standby version 2
+ standby 1 ip 10.0.11.1
+ standby 1 priority 150
+ standby 1 preempt
+!
+interface Vlan12
+ ip address 10.0.12.2 255.255.255.0
+ ip helper-address 10.0.3.1
+ ip helper-address 10.0.3.13
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:620:3106:C0::2/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2001:620:3106:90::2
+ ipv6 dhcp relay destination 2001:620:3106:90::1
+ ipv6 eigrp 1
+ standby version 2
+ standby 2 ip 10.0.12.1
+ standby 2 preempt
+!
+!
+router eigrp 1
+ network 10.0.3.0 0.0.0.3
+ network 10.0.3.12 0.0.0.3
+ network 10.0.10.0 0.0.0.255
+ network 10.0.11.0 0.0.0.255
+ network 10.0.12.0 0.0.0.255
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+ipv6 router eigrp 1
+ eigrp router-id 1.1.1.1
+!
+!
+!
+!
+banner motd ^C
+Only permitted access allowed! ^C
+!
+line con 0
+ password 7 03514C58305D3B5D681F2A1527
+ logging synchronous
+ login
+line vty 0
+ password 7 094817242111361C203D207279
+ login local
+ transport input ssh
+line vty 1 4
+ login local
+ transport input ssh
+line vty 5 15
+ login
+!
+end

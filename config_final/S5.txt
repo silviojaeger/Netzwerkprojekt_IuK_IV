@@ -1,0 +1,311 @@
+Current configuration : 6387 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname S5
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$G6Ij$riMkR/XmB9Kbus2TVvHWV.
+!
+username sshAdmin secret 5 $1$UpCz$bplyOy5WWrwG1deK6rK3O/
+!
+!
+no aaa new-model
+system mtu routing 1500
+ip routing
+no ip domain-lookup
+ip domain-name IKS2019.com
+!
+!
+login block-for 120 attempts 3 within 60
+ipv6 unicast-routing
+!
+!
+crypto pki trustpoint TP-self-signed-231651968
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-231651968
+ revocation-check none
+ rsakeypair TP-self-signed-231651968
+!
+!
+crypto pki certificate chain TP-self-signed-231651968
+ certificate self-signed 01
+  30820239 308201A2 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 32333136 35313936 38301E17 0D393330 33303130 30303235
+  375A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3233 31363531
+  39363830 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100
+  C3BD45E8 BB7A3546 CF9853BD 0230A16B A71A82EB 59479CA7 6B77C3BF F7077AEE
+  AE7F8F46 A5FBF4DD 76C8FBFE 8DE7B2D7 5C49793E A41DBB6D A6169203 45BDC59D
+  1120E42A 72DF36F8 8578A090 096602C4 9E6B3F82 5A5C6ACE 1614308F 55D74976
+  2A196FC6 6D5B2BF3 8FC3292F 960ABECF 99C1D4DE 0248D2A2 2ED7E371 13FC4747
+  02030100 01A36330 61300F06 03551D13 0101FF04 05300301 01FF300E 0603551D
+  11040730 05820353 352E301F 0603551D 23041830 168014E0 8CA7B776 604DEC62
+  25DE9882 1C9AAC5C E2C81230 1D060355 1D0E0416 0414E08C A7B77660 4DEC6225
+  DE98821C 9AAC5CE2 C812300D 06092A86 4886F70D 01010405 00038181 0018D11B
+  CAB2CC5D 671CD324 3448C661 14D44E81 F29F9C2A 8D349E99 2C0BE258 022D1B5B
+  3B4BC760 0D1566BF D0C77487 D3F429C9 85BE65AE 80DE2C75 B98E6944 951E2A0B
+  406AB818 CFECFA94 3DE000C1 1E4EF34E 58BE452F 5D39FD15 826CE7CD 512DB15E
+  C7E6FB18 39C261EB A17D0A43 FA530DAC 128B7729 1FD1F03B 3701166B 86
+  quit
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh time-out 60
+ip ssh authentication-retries 2
+ip ssh version 2
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10-12,99
+ switchport mode trunk
+!
+interface GigabitEthernet0/1
+ shutdown
+!
+interface GigabitEthernet0/2
+ shutdown
+!
+interface GigabitEthernet0/3
+ shutdown
+!
+interface GigabitEthernet0/4
+ shutdown
+!
+interface GigabitEthernet0/5
+ shutdown
+!
+interface GigabitEthernet0/6
+ shutdown
+!
+interface GigabitEthernet0/7
+ shutdown
+!
+interface GigabitEthernet0/8
+ shutdown
+!
+interface GigabitEthernet0/9
+ shutdown
+!
+interface GigabitEthernet0/10
+ shutdown
+!
+interface GigabitEthernet0/11
+ shutdown
+!
+interface GigabitEthernet0/12
+ shutdown
+!
+interface GigabitEthernet0/13
+ description "Link to S4 F0/13"
+ no switchport
+ ip address 10.1.0.2 255.255.255.252
+ ipv6 address 2001:620:3106:1000::2/64
+ ipv6 eigrp 1
+!
+interface GigabitEthernet0/14
+ shutdown
+!
+interface GigabitEthernet0/15
+ shutdown
+!
+interface GigabitEthernet0/16
+ shutdown
+!
+interface GigabitEthernet0/17
+ description "Link to S9 G0/1"
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10-12,99
+ switchport mode trunk
+ channel-group 1 mode desirable
+!
+interface GigabitEthernet0/18
+ description "Link to S9 G0/2"
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10-12,99
+ switchport mode trunk
+ channel-group 1 mode desirable
+!
+interface GigabitEthernet0/19
+ shutdown
+!
+interface GigabitEthernet0/20
+ shutdown
+!
+interface GigabitEthernet0/21
+ shutdown
+!
+interface GigabitEthernet0/22
+ shutdown
+!
+interface GigabitEthernet0/23
+ shutdown
+!
+interface GigabitEthernet0/24
+ shutdown
+!
+interface GigabitEthernet0/25
+ shutdown
+!
+interface GigabitEthernet0/26
+ shutdown
+!
+interface GigabitEthernet0/27
+ shutdown
+!
+interface GigabitEthernet0/28
+ shutdown
+!
+interface GigabitEthernet0/29
+ shutdown
+!
+interface GigabitEthernet0/30
+ shutdown
+!
+interface GigabitEthernet0/31
+ shutdown
+!
+interface GigabitEthernet0/32
+ shutdown
+!
+interface GigabitEthernet0/33
+ shutdown
+!
+interface GigabitEthernet0/34
+ shutdown
+!
+interface GigabitEthernet0/35
+ shutdown
+!
+interface GigabitEthernet0/36
+ shutdown
+!
+interface GigabitEthernet0/37
+ shutdown
+!
+interface GigabitEthernet0/38
+ shutdown
+!
+interface GigabitEthernet0/39
+ shutdown
+!
+interface GigabitEthernet0/40
+ shutdown
+!
+interface GigabitEthernet0/41
+ shutdown
+!
+interface GigabitEthernet0/42
+ shutdown
+!
+interface GigabitEthernet0/43
+ shutdown
+!
+interface GigabitEthernet0/44
+ shutdown
+!
+interface GigabitEthernet0/45
+ shutdown
+!
+interface GigabitEthernet0/46
+ shutdown
+!
+interface GigabitEthernet0/47
+ shutdown
+!
+interface GigabitEthernet0/48
+ shutdown
+!
+interface GigabitEthernet0/49
+!
+interface GigabitEthernet0/50
+!
+interface GigabitEthernet0/51
+!
+interface GigabitEthernet0/52
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 10.1.10.1 255.255.255.0
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:620:3106:10A0::1/64
+ ipv6 eigrp 1
+!
+interface Vlan11
+ ip address 10.1.11.1 255.255.255.0
+ ip helper-address 10.1.0.1
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:620:3106:10B0::1/64
+ ipv6 nd other-config-flag
+ ipv6 nd ra interval 30
+ ipv6 dhcp relay destination 2001:620:3106:90::2
+ ipv6 dhcp relay destination 2001:620:3106:90::1
+ ipv6 eigrp 1
+!
+interface Vlan12
+ ip address 10.1.12.1 255.255.255.0
+ ip helper-address 10.1.0.1
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:620:3106:10C0::1/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2001:620:3106:90::2
+ ipv6 dhcp relay destination 2001:620:3106:90::1
+ ipv6 eigrp 1
+!
+!
+router eigrp 1
+ network 10.1.0.0 0.0.0.3
+ network 10.1.10.0 0.0.0.255
+ network 10.1.11.0 0.0.0.255
+ network 10.1.12.0 0.0.0.255
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+ipv6 router eigrp 1
+ eigrp router-id 5.5.5.5
+!
+!
+!
+!
+banner motd ^C
+Only permitted access allowed! ^C
+!
+line con 0
+ password 7 014611576D591C1E075A7D1929
+ logging synchronous
+ login
+line vty 0
+ password 7 00004A2B3C4F2A08241068165B
+ login local
+ transport input ssh
+line vty 1 4
+ login local
+ transport input ssh
+line vty 5 15
+ login
+!
+end
